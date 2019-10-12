@@ -2,186 +2,188 @@
 #include <stdlib.h>
 typedef struct Lista {
     int dado;
-    struct Lista *prox, *ant;
+    struct Lista *next, *prev;
 } Lista;
 
 void insereFim(Lista **head, int dado) {
-    Lista *temp = *head;
     Lista *nova = (Lista *) malloc(sizeof(Lista));
+    Lista *temp = *head;
+
     nova->dado = dado;
-    nova->prox = NULL;
+    nova->next = NULL;
 
     if(*head == NULL) {
-        nova->ant = NULL;
+        nova->prev = NULL;
         *head = nova;
         return;
     }
-    while(temp->prox != NULL)
-        temp = temp->prox;
-    temp->prox = nova;
-    nova->ant = temp;
+    while(temp->next != NULL) 
+        temp = temp->next;
+    temp->next = nova;
+    nova->prev = temp;
+
 }
+
 void insereInicio(Lista **head, int dado) {
-    Lista *temp = *head;
+    Lista *nova = (Lista *) malloc(sizeof(Lista));
+
+    nova->dado = dado;
+    nova->next = *head;
+    nova->prev = NULL;
+
+    if(*head != NULL)
+        (*head)->prev = nova;
+    (*head) = nova;
+}
+
+void inserePosicao(Lista **head, int dado, int posicao) {
+    Lista *temp = *head, *prev;
+    int count = 0;
     Lista *nova = (Lista *) malloc(sizeof(Lista));
     nova->dado = dado;
-    nova->ant = NULL;
 
-    if(*head == NULL) {
-        nova->prox = NULL;
-        *head = nova;
-        return;
+    while(count != posicao && temp->next != NULL) {
+        prev = temp;
+        temp = temp->next;
+        count++;
     }
-    nova->prox = temp;
-    temp->ant = nova;
-    *head = nova;
+    prev->next = nova;
+    nova->prev = prev;
+    nova->next = temp;
+    temp->prev = nova;
 }
 
 void removeInicio(Lista **head) {
-    Lista *temp = *head;
-
-    if(temp->prox == NULL) {
+    if(head == NULL)
+        return;
+    if((*head)->next == NULL) {
         free(*head);
         *head = NULL;
         return;
     }
-    *head = (*head)->prox;
-    (*head)->ant = NULL;
+    Lista *temp = *head;
+    *head = (*head)->next;
+    (*head)->prev = NULL;
     free(temp);
 }
 
 void removeFim(Lista **head) {
     Lista *temp = *head, *prev;
 
-    if(*head == NULL) {
-        free(*head);
-        *head = NULL;
+    if(*head == NULL)
         return;
-    }
-    while(temp->prox != NULL) {
+
+    while(temp->next != NULL) {
         prev = temp;
-        temp = temp->prox;
+        temp = temp->next;
     }
-    prev->prox = NULL;
     free(temp);
-
+    prev->next = NULL;
 }
 
-void inserirPosicao(Lista **head, int dado, int posicao) {
-    Lista *nova = (Lista *) malloc(sizeof(Lista));
-    Lista *temp = *head, *prev;
-
-    nova->dado = dado;
-    int count = 0;
-
-    if(posicao == 0) {
-        nova->prox = *head;
-        nova->ant = NULL;
-        *head = nova;
-        return;
-    }
-
-    while(temp->prox != NULL && posicao != count) {
-        count++;
-        prev = temp;
-        temp = temp->prox;
-    }
-    prev->prox = nova;
-    nova->ant = prev;
-    nova->prox = temp;
-    temp->ant = nova;
-}
 void removePosicao(Lista **head, int posicao) {
     int count = 0;
     Lista *temp = *head, *prev;
-    
-    while(temp->prox != NULL && posicao != count) {
+
+    if(*head == NULL)
+        return;
+
+    while(temp->next != NULL && count != posicao) {
         prev = temp;
-        temp = temp->prox;
+        temp = temp->next;
         count++;
     }
-    prev->prox = temp->prox;
+    prev->next = temp->next;
+    temp->next->prev = prev;
     free(temp);
 }
-void printLista(Lista *head) {
-    int count = 0, prox, ant;
+
+void printList(Lista *head) {
+    int prev, next, tam = 0;
     while(head != NULL) {
-        if(head->prox)
-            prox = 1;
-        else
-            prox = 0;
-        if(head->ant)
-            ant = 1;
-        else    
-            ant = 0;
+        if(head->next)
+            next = 1;
+        else 
+            next = 0;
 
-        printf("%d - %d - %d\n", head->dado, ant, prox);
-        head = head->prox;
-        count++;
+        if(head->prev)
+            prev = 1;
+        else 
+            prev = 0;
+        printf("%d - %d - %d\n", head->dado, prev, next);
+
+        head = head->next;
+        tam++;
     }
-    printf("Tamanho: %d\n\n", count);
+    printf("Tamanho: %d\n\n", tam);
 }
-void printReverso(Lista *head) {
-    int count = 0, prox, ant;
+
+void printReversal(Lista *head) {
     Lista *temp = head;
-    while(temp->prox != NULL) {
-        temp = temp->prox;
-    }
-    while(temp != head) {
-        if(temp->prox)
-            prox = 1;
-        else
-            prox = 0;
-        if(temp->ant)
-            ant = 1;
-        else    
-            ant = 0;
+    int tam = 0, prev, next;
 
-        printf("%d - %d - %d\n", temp->dado, ant, prox);
-        temp = temp->ant;
-        count++;   
+    if(head != NULL) {
+
+        while(temp->next != NULL)
+            temp = temp->next;
+        while(temp != NULL) {
+            if(temp->next)
+                next = 1;
+            else 
+                next = 0;
+
+            if(temp->prev)
+                prev = 1;
+            else 
+                prev = 0;
+            printf("%d - %d - %d\n", temp->dado, prev, next);
+
+            temp = temp->prev;
+            tam++;    
+        }
     }
-    printf("Tamanho: %d\n\n", count);
+    printf("Tamanho: %d\n", tam);
 }
+
 int main() {
     int dado;
     Lista *head = NULL;
 
-    while(scanf("%d", &dado) > 0) {   
+    while(scanf("%d", &dado) > 0) {
         insereFim(&head, dado);
-    }
-    printLista(head);
+    }    
     
-
+    printList(head);
 
     insereFim(&head, 43);
     insereFim(&head, 65);
-    printLista(head);
+    printList(head);
 
     insereInicio(&head, 56);
     insereInicio(&head, 12);
-    printLista(head);
+    printList(head);
 
-    inserirPosicao(&head, 10, 2);
+    inserePosicao(&head, 10, 2);
     insereInicio(&head, 15);
-    printLista(head);
+    printList(head);
 
     removeFim(&head);
     removeFim(&head);
     removeFim(&head);
-    printLista(head);
+    printList(head);
 
-
     removeInicio(&head);
     removeInicio(&head);
     removeInicio(&head);
-    printLista(head);
+    printList(head);
 
     removeFim(&head);
     removePosicao(&head, 2);
-    printLista(head);
-    printReverso(head);
+    printList(head);
 
-    
+
+    printReversal(head);
+
+
     return 0;
 }
