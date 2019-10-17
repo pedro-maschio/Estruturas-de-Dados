@@ -49,8 +49,9 @@ int tamanho(Pilha *pilha) {
             return false;
         else if(expressao[i] == '*' || expressao[i] == '+' || expressao[i] == '/' || expressao[i] == '^' || expressao[i] == '-')
             count++;
+        
     }
-    if(tamanho(pilha) != -1 || count == 0)
+    if(count == 0)
         return false;
     return true;
     
