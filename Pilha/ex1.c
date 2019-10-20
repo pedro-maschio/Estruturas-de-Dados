@@ -1,53 +1,37 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-
-typedef struct {
-    int topo;
-    char elemento[1001][101];
-} Pilha;
-
-
-void push(Pilha *pilha, char elemento[]) {
-    sprintf(pilha->elemento[++pilha->topo], "%s", elemento);
-}
-
-void print(Pilha *pilha) {
-    while(pilha->topo > -1) {
-        printf("%s\n", pilha->elemento[pilha->topo--]);
-    }
-}
-
-void empilha(Pilha *num, Pilha *palavras, char entrada[]) {
+#include <stdlib.h>
+int ehPalindromo(char s[]) {
     int i, count = 0;
-
-    for(i = 0; i < strlen(entrada); i++) {
-        if(entrada[i] >= 48 && entrada[i] <= 57)
+    for(i = 0; i < strlen(s); i++) {
+        if(s[i] == s[strlen(s)-i-1])
             count++;
     }
-    if(count == strlen(entrada))
-        push(num, entrada);
+    if(count == strlen(s))
+        return 1;
     else 
-        push(palavras, entrada);
+        return 0;
 }
-
 int main() {
-    char entrada[1001];
+    char s[256], aux[4];
+    int i, j, k, count = 0;
 
-    Pilha *numeros = malloc(sizeof(Pilha));
-    Pilha *palavras = malloc(sizeof(Pilha));
-    numeros->topo = -1;
-    palavras->topo = -1;
 
-    while(strcmp(entrada, "end") != 0) {
-        scanf("%s", entrada);
-        if(strcmp(entrada, "end") != 0) {
-            empilha(numeros, palavras, entrada);
+    while(scanf("%s", s) != EOF) {
+        for(i = 0; i < strlen(s); i++) {
+            k = 0;
+            for(j = i; j < (i+3); j++) {
+                aux[k] = s[j];
+                k++;
+            }
+            aux[k+1] = '\0';;
+            if(ehPalindromo(aux) && strlen(aux) > 2) {
+                count++;
+            }
         }
+        if(count >= 2)
+            printf("%s\n", s);
+        count = 0;
     }
-    printf("Palavras:\n");
-    print(palavras);
-    printf("Numeros:\n");
-    print(numeros);
     return 0;
 }

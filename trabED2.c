@@ -61,7 +61,9 @@ int foraPrec(char elemento) {
     else if(elemento == '^') 
         return 6; 
     else if(elemento == '(') 
-        return 100; 
+        return 50;
+    // precedencia mais alta () 
+    return 0;
 }
 
 int ehOperador(char el) {
@@ -73,12 +75,13 @@ int ehOperador(char el) {
 /* Mudei a assinatura da funcao pois ficava mais facil ir 
 imprimindo do que preencher a string de resultado :)
 */
-void transforma(const char* infixa, Pilha *pilha) {
+
+void transforma(const char* infixa, const char *posfixa, Pilha *pilha) {
     int i;
     for(i = 0; i < strlen(infixa); i++) {
         char c = infixa[i];
         if(c >= 48 && c <= 57) {
-            while((c >= 48 && c <= 57) || c == '.') {
+            while(((c >= 48 && c <= 57) || c == '.')) {
                 printf("%c", c);
                 i++;
                 c = infixa[i];
@@ -89,7 +92,7 @@ void transforma(const char* infixa, Pilha *pilha) {
             if(taVazia(pilha) || (foraPrec(c) > precedencia(peek(pilha)))) {
                 push(pilha, c);
             } else {
-                while(!taVazia(pilha) && (foraPrec(c) < precedencia(peek(pilha)))) {
+                while(!taVazia(pilha) && (foraPrec(c) <= precedencia(peek(pilha)))) {
                     printf("%c ", pop(pilha));
                 }
                 push(pilha, c);
@@ -112,6 +115,7 @@ void transforma(const char* infixa, Pilha *pilha) {
         }
         printf("%c ", pop(pilha));
     }
+    printf("\n");
 }
 
 
@@ -121,7 +125,7 @@ int main() {
 
     scanf("%100[^\n]", infixa);
 
-    transforma(infixa, pilha);
+    transforma(infixa, posfixa, pilha);
 
     return 0;
 }
