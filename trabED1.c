@@ -37,24 +37,25 @@ int ehOPerador(char el) {
 }
 
 int taOk(const char expressao[], int i) {
-    int numCount = 0, opCount= 0;
+    int numCount = 0, opCount = 0;
     char c;
-    
+
     while(i >= 0) {
         c = expressao[i];
+
         if(c >= 48 && c <= 57) {
             numCount++;
-            while(!ehOPerador(c) && c != ' ' && c != '(' && c != '(' && c != '(' && i != 0) {
+
+            while(c != ' ' && c != '(' && c != '[' && c != '{' && !ehOPerador(c) && i != 0)
                 c = expressao[--i];
-            }
-            c = expressao[++i];
+            i++;
         } else if(ehOPerador(c))
             opCount++;
+    
         i--;
     }
-    if(opCount != (numCount-1)) 
+    if(numCount != (opCount-1))
         return false;
-    
     return true;
 }
 
@@ -95,9 +96,8 @@ int taOk(const char expressao[], int i) {
                 c = expressao[++i];
             }
             c = expressao[--i];
-        }
-        else if(c == ')' || c == ']' || c == '}') {
-            if(!taOk(expressao, i)) 
+        } else if(c == ')' || c == '}' || c == ']') {
+            if(!taOk(expressao, i))
                 return false;
         }
         i++;

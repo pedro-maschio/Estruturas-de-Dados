@@ -47,7 +47,7 @@ int precedencia(char elemento) {
         return 4;
     else if(elemento == '^')
         return 5;
-    else if(elemento == '(')
+    else if(elemento == '(' || elemento == '[' || elemento == '{')
         return 0;
     return 0;
 }
@@ -60,14 +60,14 @@ int foraPrec(char elemento) {
         return 3; 
     else if(elemento == '^') 
         return 6; 
-    else if(elemento == '(') 
+    else if(elemento == '(' || elemento  == '[' || elemento == '{') 
         return 50;
     // precedencia mais alta () 
     return 0;
 }
 
 int ehOperador(char el) {
-    if(el == '+' || el == '-' || el == '/' || el == '*' || el == '^' || el == '(')
+    if(el == '+' || el == '-' || el == '/' || el == '*' || el == '^' || el == '(' || el == '{' || el == '[')
         return 1;
     return 0;
 }
@@ -99,6 +99,24 @@ void transforma(const char* infixa, const char *posfixa, Pilha *pilha) {
             }
         } else if(c == ')') {
             while(peek(pilha) != '(') {
+                printf("%c ", pop(pilha));
+
+                if(taVazia(pilha)) {
+                    return;
+                }
+            }
+            pop(pilha);
+        } else if(c == ']') {
+            while(peek(pilha) != '[') {
+                printf("%c ", pop(pilha));
+
+                if(taVazia(pilha)) {
+                    return;
+                }
+            }
+            pop(pilha);
+        } else if(c == '}') {
+            while(peek(pilha) != '{') {
                 printf("%c ", pop(pilha));
 
                 if(taVazia(pilha)) {
