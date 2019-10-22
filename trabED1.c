@@ -39,7 +39,6 @@ int ehOPerador(char el) {
 int taOk(const char expressao[], int i) {
     int numCount = 0, opCount = 0;
     char c;
-
     while(i >= 0) {
         c = expressao[i];
 
@@ -48,14 +47,15 @@ int taOk(const char expressao[], int i) {
 
             while(c != ' ' && c != '(' && c != '[' && c != '{' && !ehOPerador(c) && i != 0)
                 c = expressao[--i];
-            i++;
+            
         } else if(ehOPerador(c))
             opCount++;
     
         i--;
     }
-    if(numCount != (opCount-1))
+    if(opCount != (numCount-1)) {
         return false;
+    }
     return true;
 }
 
@@ -67,9 +67,10 @@ int taOk(const char expressao[], int i) {
     while(i < strlen(expressao)) {
         c = expressao[i];
 
+        // se a expressao comeca com operador
         if(i == 0 && ehOPerador(c))
             return false;
-        else if(i == 0 && (c == ')' || c == ']' || c == '}')) {
+        if(i == 0 && (c == ')' || c == ']' || c == '}')) {
             return false;
         } if(c == '(') {
             push(pilha, c);
@@ -88,7 +89,8 @@ int taOk(const char expressao[], int i) {
             return false;
         } else if(c == ')' || c == ']' || c == '}') {
             cCount--;
-        } if(ehOPerador(c))
+        } 
+        if(ehOPerador(c))
             opCount++;
         else if(c >= 48 && c <= 57) {
             numCount++;
@@ -97,7 +99,7 @@ int taOk(const char expressao[], int i) {
             }
             c = expressao[--i];
         } else if(c == ')' || c == '}' || c == ']') {
-            if(!taOk(expressao, i))
+            if(!taOk(expressao, i-1))
                 return false;
         }
         i++;
