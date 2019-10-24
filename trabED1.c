@@ -50,9 +50,13 @@ int taOk(const char expressao[], int i) {
             
         } else if(ehOPerador(c))
             opCount++;
+        else if(c == '(' || c == '[' || c == '{')
+            break;
     
         i--;
     }
+    if(opCount == 0 && numCount == 0)
+        return false;
     if(opCount != (numCount-1)) {
         return false;
     }
@@ -99,7 +103,7 @@ int taOk(const char expressao[], int i) {
             }
             c = expressao[--i];
         } else if(c == ')' || c == '}' || c == ']') {
-            if(!taOk(expressao, i-1))
+            if(!taOk(expressao, i))
                 return false;
         }
         i++;
