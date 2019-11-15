@@ -1,33 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
-int compare(const void *a, const void *b) {
-    return (*(char*)a - *(char*)b);
-}
-
-
+#include <string.h>
 int main() {
-    int i, n, naoc = 0 , comp = 0;
-    char c;
+    char str[100000];
+    int i, freq[26], aux[26], flag = 0, k = 0;
+    for(i = 0; i < 26; i++)
+        freq[i] = aux[i] = 0;
 
-    scanf("%d", &n);
-    char nomes[n][21];
+    scanf("%s", str);
 
-    for(i = 0; i < n; i++) {
-        scanf(" %c", &c);
-        
-        if(c == '+')
-            comp++;
+    for(i = 0; i < strlen(str); i++) 
+        freq[str[i]-'a']++;
+
+    for(i = 0; i < 25; i++) {
+        if(freq[i] > 0) {
+            aux[k] = freq[i];
+            k++;
+        }
+    }
+    for(i = 0; i < k-1; i++) {
+        if(aux[i] == aux[i+1])
+            flag++;
         else 
-            naoc++;
-
-        scanf("%s", nomes[i]);
+            flag--;
     }
-    qsort(nomes, n, 21*sizeof(char), compare);
-
-    for(i = 0; i < n; i++) {
-        printf("%s\n", nomes[i]);
-    }
-    printf("Se comportaram: %d | Nao se comportaram: %d\n", comp, naoc);
-
+    if(flag == k-1 || flag == k-2)
+        printf("YES");
+    else 
+        printf("NO");
+    
     return 0;
 }

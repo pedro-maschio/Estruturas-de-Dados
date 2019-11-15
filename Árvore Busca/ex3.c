@@ -41,13 +41,19 @@ ab_int* insere(ab_int* raiz, int dado) {
     return raiz;
 }
 
+void rotaciona_direita(ab_int **raiz) {
+
+}
+
 void comprime(ab_int **p_raiz, int rotacoes) {
     /* Insira o código aqui. */
     ab_int *raiz = *p_raiz;
 
     int i = 0;
-    while(i < rotacoes) {
-
+    while(i < rotacoes && raiz != NULL) {
+        rotaciona_direita(&raiz);
+        i++;
+        raiz = raiz->esq;
     }
 }
 int main() {
